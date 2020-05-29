@@ -36,7 +36,7 @@ const sendFirebase = async (razao) => {
                 const obj = {
                     id_transaction: 'relatorio_futuro',
                     status: 'Comissões em Aberto',
-                    fabricante: razao,
+                    fantasia: razao,
                     counter: 'Futuro',
                     billets:filtrado
                 }
