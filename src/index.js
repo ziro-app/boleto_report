@@ -40,7 +40,7 @@ const sendFirebase = async (razao) => {
                     counter: 'Futuro',
                     billets:filtrado
                 }
-                await db.collection('pending_commission').doc(razao).set(obj)
+                await db.collection('pending-commission').doc(razao).set(obj)
                 console.log('Boletos', filtrado)
                 console.log('\x1b[32m%s\x1b[0m',`Dados do fabricante ${razao} enviados com sucesso`)
                 console.log('\x1b[32m%s\x1b[0m','N° de boletos', filtrado.length)
