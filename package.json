@@ -1,4 +1,12 @@
 {
+  "name": "duplicate_report",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./src/index"
+  },
+  "author": "Ahmad Forhat",
   "dependencies": {
     "@ziro/array-object": "^1.0.0",
     "axios": "^0.19.2",
