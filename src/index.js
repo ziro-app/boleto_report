@@ -34,10 +34,8 @@ const sendFirebase = async (razao) => {
                 })
                 const totalReceitas = arrayReceitas.reduce((a,b) => a+b)
                 const obj = {
-                    id_transaction: 'relatorio_futuro',
                     status: 'Comissões em Aberto',
-                    fantasia: razao,
-                    counter: 'Futuro',
+                    fantasia: razao.toUpperCase(),
                     billets:filtrado
                 }
                 await db.collection('pending-commission').doc(razao).set(obj)
