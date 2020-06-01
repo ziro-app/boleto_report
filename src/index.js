@@ -13,7 +13,7 @@ const sendFirebase = async (razao) => {
                 apiResource: 'values',
                 apiMethod: 'batchGet',
                 spreadsheetId: process.env.SHEET_ID_CHARGE,
-                ranges: ['Boletos!A:L']
+                ranges: ['Boletos!A:M']
             },  
             headers: {
                 'Authorization': process.env.SHEET_TOKEN,
@@ -38,7 +38,7 @@ const sendFirebase = async (razao) => {
                     fantasia: razao.toUpperCase(),
                     billets:filtrado
                 }
-                await db.collection('pending-commission').doc(razao).set(obj)
+                await db.collection('pending-commission').doc(razao.toUpperCase()).set(obj)
                 console.log('Boletos', filtrado)
                 console.log('\x1b[32m%s\x1b[0m',`Dados do fabricante ${razao} enviados com sucesso`)
                 console.log('\x1b[32m%s\x1b[0m','N° de boletos', filtrado.length)
