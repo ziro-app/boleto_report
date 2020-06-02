@@ -3,6 +3,9 @@
 ## Objetivo
 Este código tem como principal objetivo atualizar e cadastrar novas comissões no banco do firebase, o que é refletido diretamente para o [aplicativo dos fabricantes](http://fabricantes.ziro.app/).
 
+## Processo
+O processo consiste em algumas etapas e uma delas depende das informações abaixo, para compreender melhor entre no link do [fluxograma](https://drive.google.com/file/d/18s7p8RTNk_iKvBg9BJM5K-2gxTmSsdcb/view).
+
 ## Como Usar
 ### Configurações Iniciais
 Obs: Os passos abaixos são para o rodar em sistema windows.
