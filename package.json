@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "pading": "node ./src/padingComission/index",
+    "pending": "node ./src/pendingComission/index",
     "update": "node ./src/updateComission/index"
   },
   "author": "Ahmad Forhat",
