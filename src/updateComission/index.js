@@ -16,7 +16,7 @@ const updateComission = async (razao) => {
             let queryPending = db.collection('pending-commission').where('fantasia', '==', razao.toUpperCase())
             const snapPending = await queryPending.get()
             snapPending.forEach((doc) => {
-                if(doc.data().billet){
+                if(doc.data().billets){
                     arrayPending.push({billets: doc.data().billets})
                 }
             })
