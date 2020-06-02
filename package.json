@@ -4,13 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node ./src/index"
+    "pading": "node ./src/padingComission/index",
+    "update": "node ./src/updateComission/index"
   },
   "author": "Ahmad Forhat",
   "dependencies": {
     "@ziro/array-object": "^1.0.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-    "firebase": "^7.14.5"
+    "firebase": "^7.14.5",
+    "moment": "^2.26.0"
   }
 }

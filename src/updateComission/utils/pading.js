@@ -1,6 +1,6 @@
 const axios = require('axios')
 const arrayObject = require('@ziro/array-object')
-const { db } = require('./firebase/index')
+const { db } = require('../../firebase/index')
 
 require('dotenv').config()
 
@@ -39,24 +39,22 @@ const sendFirebase = async (razao) => {
                     billets:filtrado
                 }
                 await db.collection('pending-commission').doc(razao.toUpperCase()).set(obj)
-                console.log('Boletos', filtrado)
                 console.log('\x1b[32m%s\x1b[0m',`Dados do fabricante ${razao} enviados com sucesso`)
                 console.log('\x1b[32m%s\x1b[0m','N° de boletos', filtrado.length)
-                console.log('\x1b[32m%s\x1b[0m','Total à receber',totalReceitas)
-                process.exit(0)
+                console.log('\x1b[32m%s\x1b[0m','Total Recebido',totalReceitas)
+                return 'Pending realizado com sucesso'
             }else{
                 console.log('\x1b[31m%s\x1b[0m','Erro: Fabricante não encontrado ou sem nenhuma pendência')
-                process.exit(0)
+                return 'Não encontramos o fabricante'
             }
     
         } catch (error) {
             console.log(error)
-            process.exit(0)
+            return error
         }
     }else{
         console.log('\x1b[31m%s\x1b[0m','Erro: Fornecedor não informado no terminal, favor digitar qual fornecedor deseja adicionar')
     }
-
 }
 
-sendFirebase(process.argv[2])
+module.exports = sendFirebase
