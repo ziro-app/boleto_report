@@ -20,13 +20,17 @@ const updateComission = async (razao) => {
                     arrayPending.push({billets: doc.data().billets})
                 }
             })
+            const clientId = razao.toUpperCase();
+            const encodedData = `${Buffer.from(clientId).toString('base64')}${arrayFirebase.length+1}`;
+            console.log(encodedData)
             if(arrayPending[0]){
                 const objeto = {
                     'fantasia': razao.toUpperCase(),
                     'status': 'Pagamento Realizado',
                     'date_payment': new Date(),
                     'counter': arrayFirebase.length+1,
-                    'billets': arrayPending[0].billets
+                    'billets': arrayPending[0].billets,
+                    'transactionZoopId': encodedData
                 }
                 await db.collection('boleto-payments').add(objeto)
                 console.log('\x1b[32m%s\x1b[0m','Atualização', objeto.billets)
