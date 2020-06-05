@@ -26,7 +26,6 @@ const updateComission = async (razao) => {
             const result = await axios(config)
             const filtrado = arrayObject(result.data.valueRanges[0]).filter(item => item.fornecedor === razao)
             let arrayFirebase = []
-            let arrayPending = []
             let queryPayments = db.collection('boleto-payments').where('fantasia', '==', razao.toUpperCase())
             const snapPayments = await queryPayments.get()
             snapPayments.forEach((doc) => {
@@ -34,41 +33,84 @@ const updateComission = async (razao) => {
                 })
             let queryPending = db.collection('pending-commission').where('fantasia', '==', razao.toUpperCase())
             const snapPending = await queryPending.get()
-            snapPending.forEach((doc) => {
-                if(doc.data().billets){
-                    arrayPending.push({billets: doc.data().billets})
+            snapPending.forEach( async (doc) => {
+                // Condicional se tem 1 polo só ou não
+                const unicoPolo = doc.data().billets ? true : false
+                if(unicoPolo){
+                    const { billets } = doc.data()
+                    let arrayPagos = []
+                    billets.map(item => {
+                        arrayPagos.push(...filtrado.filter((sheet) => {
+                            return item.boleto === sheet.boleto
+                        }))
+                    })
+                    const clientId = razao.toUpperCase();
+                    const encodedData = `${Buffer.from(clientId).toString('base64')}${arrayFirebase.length+1}`
+                    if(billets[0]){
+                        const updateObj = {
+                            'fantasia': razao.toUpperCase(),
+                            'status': 'Pagamento Realizado',
+                            'date_payment': new Date(2020,4,25),
+                            'counter': arrayFirebase.length+1,
+                            'transactionZoopId': encodedData,
+                            'payment_type': 'transfer',
+                            'billets': arrayPagos
+                        }
+                        console.log(updateObj)
+                        await db.collection('boleto-payments').add(updateObj)
+                        console.log('\x1b[32m%s\x1b[0m','Atualização', updateObj.billets.length)
+                        await sendFirebase(razao)
+                        console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
+                        console.log('\x1b[32m%s\x1b[0m','Data do pagamento', moment(updateObj.date_payment).format('DD/MM/YYYY'))
+                        console.log('\x1b[32m%s\x1b[0m','Status de pagamento atualizado com sucesso')
+                        process.exit(0)
+                    }else{
+                        console.log('\x1b[31m%s\x1b[0m','Erro: Fabricante não encontrado ou sem nenhuma pendência')
+                        process.exit(0)  
+                    }
+                }else{
+                    let counter = -1
+                    doc.data().pending_polos.map( async (polo) => {
+                        let baixados = polo.billets.map(boleto => {
+                            return filtrado.filter((sheetRow) => {
+                                return boleto.boleto === sheetRow.boleto
+                            })
+                        })
+                        const arrayBaixados = baixados.map(item => {
+                            return item[0]
+                        }).filter(item => {
+                            return item
+                        })
+                        if(arrayBaixados[0]){
+                            counter++
+                            const clientId = razao.toUpperCase();
+                            const encodedData = `${Buffer.from(clientId).toString('base64')}${arrayFirebase.length+counter}`
+                            const updateObj = {
+                                'fantasia': razao.toUpperCase(),
+                                'status': 'Pagamento Realizado',
+                                'date_payment': new Date(2020,4,25),
+                                'counter': arrayFirebase.length+1+counter,
+                                'transactionZoopId': encodedData,
+                                'payment_type': 'transfer',
+                                'billets': arrayBaixados
+                            }
+                            try {
+                                await db.collection('boleto-payments').add(updateObj)
+                                console.log('\x1b[32m%s\x1b[0m',`O pagamento do polo: ${polo.polo} foi relatado com sucesso!`)
+                                console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
+                                console.log('\x1b[32m%s\x1b[0m','Data do pagamento', moment(updateObj.date_payment).format('DD/MM/YYYY'))
+                                console.log('\x1b[32m%s\x1b[0m','Status de pagamento atualizado com sucesso')
+                                await sendFirebase(razao)
+                                console.log(`Relatório de pendências do polo: ${polo.polo} foi atualizada com sucesso!`)
+                            } catch (error) {
+                                console.log('Erro ao tentar atualizar o pagamento dos polos')
+                            }
+                        }else{
+                            console.log(`O polo: ${polo.polo} não teve nenhum pagamento realizado`)
+                        }
+                    })
                 }
             })
-            let arrayPagos = []
-            arrayPending[0].billets.map(item => {
-                arrayPagos.push(...filtrado.filter((sheet) => {
-                    return item.boleto === sheet.boleto
-                }))
-            })
-            const clientId = razao.toUpperCase();
-            const encodedData = `${Buffer.from(clientId).toString('base64')}${arrayFirebase.length+1}`
-            if(arrayPending[0]){
-                const updateObj = {
-                    'fantasia': razao.toUpperCase(),
-                    'status': 'Pagamento Realizado',
-                    'date_payment': new Date(),
-                    'counter': arrayFirebase.length+1,
-                    'transactionZoopId': encodedData,
-                    'payment_type': 'transfer',
-                    'billets': arrayPagos
-                }
-                await db.collection('boleto-payments').add(updateObj)
-                console.log('\x1b[32m%s\x1b[0m','Atualização', updateObj.billets.length)
-                await sendFirebase(razao)
-                console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
-                console.log('\x1b[32m%s\x1b[0m','Data do pagamento', moment(updateObj.date_payment).format('DD/MM/YYYY'))
-                console.log('\x1b[32m%s\x1b[0m','Status de pagamento atualizado com sucesso')
-                process.exit(0)  
-            }else{
-                console.log('\x1b[31m%s\x1b[0m','Erro: Fabricante não encontrado ou sem nenhuma pendência')
-                process.exit(0)  
-            }
-            
         } catch (error) {
             console.log(error) 
             process.exit(0)
