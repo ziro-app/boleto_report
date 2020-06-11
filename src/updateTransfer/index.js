@@ -14,7 +14,7 @@ const updateComission = async (razao) => {
                 apiResource: 'values',
                 apiMethod: 'batchGet',
                 spreadsheetId: process.env.SHEET_ID_CHARGE,
-                ranges: ['BoletoBaixados!A:N']
+                ranges: ['BoletoBaixados!O:AB']
             },  
             headers: {
                 'Authorization': process.env.SHEET_TOKEN,
@@ -26,7 +26,7 @@ const updateComission = async (razao) => {
             const result = await axios(config)
             const filtrado = arrayObject(result.data.valueRanges[0]).filter(item => item.fornecedor === razao)
             let arrayFirebase = []
-            let queryPayments = db.collection('boleto-payments').where('fantasia', '==', razao.toUpperCase())
+            let queryPayments = db.collection('comission-payments').where('fantasia', '==', razao.toUpperCase())
             const snapPayments = await queryPayments.get()
             snapPayments.forEach((doc) => {
                     arrayFirebase.push(doc.data())
@@ -50,14 +50,14 @@ const updateComission = async (razao) => {
                         const updateObj = {
                             'fantasia': razao.toUpperCase(),
                             'status': 'Pagamento Realizado',
-                            'date_payment': new Date(2020,4,25),
+                            'date_payment': new Date(),
                             'counter': arrayFirebase.length+1,
                             'transactionZoopId': encodedData,
                             'payment_type': 'transfer',
                             'billets': arrayPagos
                         }
                         console.log(updateObj)
-                        await db.collection('boleto-payments').add(updateObj)
+                        await db.collection('comission-payments').add(updateObj)
                         console.log('\x1b[32m%s\x1b[0m','Atualização', updateObj.billets.length)
                         await sendFirebase(razao)
                         console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
@@ -88,27 +88,27 @@ const updateComission = async (razao) => {
                             const updateObj = {
                                 'fantasia': razao.toUpperCase(),
                                 'status': 'Pagamento Realizado',
-                                'date_payment': new Date(2020,4,25),
+                                'date_payment': new Date(),
                                 'counter': arrayFirebase.length+1+counter,
                                 'transactionZoopId': encodedData,
                                 'payment_type': 'transfer',
                                 'billets': arrayBaixados
                             }
                             try {
-                                await db.collection('boleto-payments').add(updateObj)
-                                console.log('\x1b[32m%s\x1b[0m',`O pagamento do polo: ${polo.polo} foi relatado com sucesso!`)
-                                console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
+                                await db.collection('comission-payments').add(updateObj)
+                                console.log('\x1b[32m%s\x1b[0m',`O pagamento do polo: ${polo.polo} da ${updateObj.fantasia} foi relatado com sucesso!`)
                                 console.log('\x1b[32m%s\x1b[0m','Data do pagamento', moment(updateObj.date_payment).format('DD/MM/YYYY'))
                                 console.log('\x1b[32m%s\x1b[0m','Status de pagamento atualizado com sucesso')
                                 await sendFirebase(razao)
                                 console.log(`Relatório de pendências do polo: ${polo.polo} foi atualizada com sucesso!`)
                             } catch (error) {
-                                console.log('Erro ao tentar atualizar o pagamento dos polos')
+                                console.log(`Erro ao tentar atualizar o pagamento do ${polo.polo}`)
                             }
                         }else{
                             console.log(`O polo: ${polo.polo} não teve nenhum pagamento realizado`)
                         }
                     })
+                    process.exit(0)
                 }
             })
         } catch (error) {
