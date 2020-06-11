@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "pending": "node ./src/pendingComission/index",
-    "update": "node ./src/updateComission/index"
+    "updateTransfer": "node ./src/updateTransfer/index",
+    "updateBoleto": "node ./src/updateBoleto/index"
   },
   "author": "Ahmad Forhat",
   "dependencies": {
