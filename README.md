@@ -4,7 +4,7 @@
 Este código tem como principal objetivo atualizar e cadastrar novas comissões no banco do firebase, o que é refletido diretamente para o [aplicativo dos fabricantes](http://fabricantes.ziro.app/).
 
 ## Processo
-O processo consiste em algumas etapas e uma delas depende das informações abaixo, para compreender melhor entre no link do [fluxograma](https://drive.google.com/drive/folders/1ooAg1FZd9FEdNW6fqLxFZw46SbV0oEcP).
+O processo consiste em algumas etapas e uma delas depende das informações abaixo, para compreender melhor entre no link do [fluxograma](https://drive.google.com/file/d/1CfMDJMNrkIRLI2QAuKx8srCaG2U2POro/view?usp=sharing).
 
 ## Como Usar
 ### Configurações Iniciais
