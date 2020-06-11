@@ -56,11 +56,15 @@ Obs: Os passos abaixos são para o rodar em sistema windows.
 
 #### Atualizando Status
 * Sempre lembre de verificar em que pasta seu terminal está operando, se tiver dúvida entre em contato.
-* Se estiver na pasta correta basta digitar o comando:
+* Se estiver na pasta correta basta digitar o comando para atualizar o pagamento de boletos:
     ```
-    $ yarn update 'nome fantasia'
+    $ yarn updateBoleto 'nome fantasia'
     ```
-* Sempre confira a quantidade de boletos atualizadas e o valor, essas informações vão aparecer na tela, qualquer tipo de erro também aparecera na tela.
+* Ou digitar o comando para atualizar o pagamento de transferências:
+    ```
+    $ yarn updateTransfer 'nome fantasia'
+    ```
+* Sempre confira a quantidade de boletos atualizadas e o valor, essas informações vão aparecer na tela, qualquer tipo de erro também aparecera na tela, se definir que as mensgens poderiam ser melhores só dar um toque que eu tento melhorar elas.
 
 
 Dica: Não tenha medo de errar e perguntar, estamos aqui pra aprender juntos.
