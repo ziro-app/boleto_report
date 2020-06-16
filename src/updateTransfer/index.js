@@ -63,10 +63,8 @@ const updateComission = async (razao) => {
                         console.log('\x1b[32m%s\x1b[0m','Fantasia', updateObj.fantasia)
                         console.log('\x1b[32m%s\x1b[0m','Data do pagamento', moment(updateObj.date_payment).format('DD/MM/YYYY'))
                         console.log('\x1b[32m%s\x1b[0m','Status de pagamento atualizado com sucesso')
-                        process.exit(0)
                     }else{
                         console.log('\x1b[31m%s\x1b[0m','Erro: Fabricante não encontrado ou sem nenhuma pendência')
-                        process.exit(0)  
                     }
                 }else{
                     let counter = -1
@@ -110,10 +108,8 @@ const updateComission = async (razao) => {
                     })
                 }
             })
-            process.exit(0)
         } catch (error) {
             console.log(error) 
-            process.exit(0)
         }
 }
 
