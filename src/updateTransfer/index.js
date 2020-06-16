@@ -108,9 +108,9 @@ const updateComission = async (razao) => {
                             console.log(`O polo: ${polo.polo} não teve nenhum pagamento realizado`)
                         }
                     })
-                    process.exit(0)
                 }
             })
+            process.exit(0)
         } catch (error) {
             console.log(error) 
             process.exit(0)
