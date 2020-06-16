@@ -14,7 +14,7 @@ const updateBoleto = async (razao) => {
                 apiResource: 'values',
                 apiMethod: 'batchGet',
                 spreadsheetId: process.env.SHEET_ID_CHARGE,
-                ranges: ['BoletoBaixados!O:AB']
+                ranges: ['BoletoBaixados!A:N']
             },  
             headers: {
                 'Authorization': process.env.SHEET_TOKEN,
